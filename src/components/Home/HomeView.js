@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import moment from 'moment';
+
 import HomeViewStyles from './HomeViewStyles';
 import i18n from '../../i18n/i18n'
 
@@ -40,7 +42,8 @@ class HomeView extends React.Component {
                         paused: !paused
                     })
                 }}>
-                <Text style={HomeViewStyles.mainActionButtonText}>{time}</Text>
+                <Text style={HomeViewStyles.mainActionButtonText}>{moment.utc(time).format('HH:mm:ss')}</Text>
+            <Text style={[HomeViewStyles.mainActionButtonText, HomeViewStyles.mainActionButtonPauseText]}>{i18n.HOME.PAUSE}</Text>
             </TouchableOpacity>
         )
     }
