@@ -8,20 +8,22 @@ class HomeView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            time: 0
+            time: 0,
         }
     };
-    
+
     renderStartButton() {
         return (
             <TouchableOpacity style={HomeViewStyles.mainActionButton}
                 onPress={() => {
-                    const { time } = this.state;
                     setInterval(() => {
-                        this.setState({
-                            time: time + 1000
-                        });
-                    }, 1000);
+                        const { time, paused } = this.state;
+                        if (!paused) {
+                            this.setState({
+                                time: time + 1000
+                            })
+                        }
+                    });
                 }}>
                 <Text style={HomeViewStyles.mainActionButtonText}>{i18n.HOME.START}</Text>
             </TouchableOpacity>
@@ -33,11 +35,10 @@ class HomeView extends React.Component {
         return (
             <TouchableOpacity style={HomeViewStyles.mainActionButton}
                 onPress={() => {
-                    setInterval(() => {
-                        this.setState({
-                            time: this.state.time + 1000
-                        });
-                    }, 1000);
+                    const { paused } = this.state;
+                    this.setState({
+                        paused: !paused
+                    })
                 }}>
                 <Text style={HomeViewStyles.mainActionButtonText}>{time}</Text>
             </TouchableOpacity>
@@ -52,9 +53,8 @@ class HomeView extends React.Component {
                     <Text style={HomeViewStyles.welcomeHeader}>{i18n.HOME.WELCOME_HEADER}</Text>
                 </View>
                 <View style={{ flex: 2 }}>
-                {time > 0 ? this.renderRunningTime() : this.renderStartButton()}
+                    {time > 0 ? this.renderRunningTime() : this.renderStartButton()}
                 </View>
-
             </View>
         );
     }
