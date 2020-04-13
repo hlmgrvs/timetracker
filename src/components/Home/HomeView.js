@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import moment from 'moment';
+import { View, Text, AppState } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import HomeViewStyles from './HomeViewStyles';
 import i18n from '../../i18n/i18n'
@@ -15,7 +15,32 @@ class HomeView extends React.Component {
         }
         this.startTimer = this.startTimer.bind(this);
         this.pauseTimer = this.pauseTimer.bind(this);
+        this.handleAppStateChange = this.handleAppStateChange.bind(this);
     };
+
+    async handleAppStateChange(nextAppState) {
+        console.log(nextAppState);
+        const now = new Date().getTime();
+        
+        const { time } = this.state;
+        await AsyncStorage.setItem('@time', JSON.stringify(time));
+        await AsyncStorage.setItem('@appStateChangedStamp', JSON.stringify(now));
+
+        const readTime = await AsyncStorage.getItem('@time');
+        const readState = await AsyncStorage.getItem('@appStateChangedStamp');
+        console.log(readTime, readState);
+
+
+
+    }
+
+    componentDidMount() {
+        AppState.addEventListener('change', this.handleAppStateChange);
+    }
+
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange)
+    }
 
     startTimer() {
         setInterval(() => {
