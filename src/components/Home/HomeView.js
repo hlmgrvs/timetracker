@@ -13,7 +13,27 @@ class HomeView extends React.Component {
         this.state = {
             time: 0,
         }
+        this.startTimer = this.startTimer.bind(this);
+        this.pauseTimer = this.pauseTimer.bind(this);
     };
+
+    startTimer() {
+        setInterval(() => {
+            const { time, paused } = this.state;
+            if (!paused) {
+                this.setState({
+                    time: time + 1000
+                })
+            }
+        });
+    }
+
+    pauseTimer() {
+        const { paused } = this.state;
+        this.setState({
+            paused: !paused
+        })
+    }
 
     render() {
         const { time } = this.state;
@@ -23,25 +43,10 @@ class HomeView extends React.Component {
                     <Text style={HomeViewStyles.welcomeHeader}>{i18n.HOME.WELCOME_HEADER}</Text>
                 </View>
                 <View style={{ flex: 2 }}>
-                    {/* {time > 0 ? this.renderRunningTime() : this.renderStartButton()} */}
                     <StopWatchButton
                         time={time}
-                        startOnPressAction={() => {
-                            setInterval(() => {
-                                const { time, paused } = this.state;
-                                if (!paused) {
-                                    this.setState({
-                                        time: time + 1000
-                                    })
-                                }
-                            });
-                        }}
-                        timerOnPressAction={() => {
-                            const { paused } = this.state;
-                            this.setState({
-                                paused: !paused
-                            })
-                        }}
+                        startOnPressAction={this.startTimer}
+                        timerOnPressAction={this.pauseTimer}
                     />
                 </View>
             </View>
