@@ -19,18 +19,25 @@ class HomeView extends React.Component {
     };
 
     async handleAppStateChange(nextAppState) {
-        console.log(nextAppState);
         const now = new Date().getTime();
-        
         const { time } = this.state;
-        await AsyncStorage.setItem('@time', JSON.stringify(time));
-        await AsyncStorage.setItem('@appStateChangedStamp', JSON.stringify(now));
 
         const readTime = await AsyncStorage.getItem('@time');
-        const readState = await AsyncStorage.getItem('@appStateChangedStamp');
-        console.log(readTime, readState);
+        const readStateTimestamp = await AsyncStorage.getItem('@appStateChangedStamp');
 
+        const timeDifference = now - parseInt(readStateTimestamp)
+        const newTime = parseInt(readTime) + timeDifference
 
+        console.log('timeDifference: ', timeDifference, 'newTime: ', newTime);
+
+        if (nextAppState === 'active') {
+            this.setState({
+                time: newTime
+            }, this.startTimer)
+        }
+
+        await AsyncStorage.setItem('@time', JSON.stringify(time));
+        await AsyncStorage.setItem('@appStateChangedStamp', JSON.stringify(now));
 
     }
 
