@@ -12,6 +12,7 @@ class HomeView extends React.Component {
         super(props);
         this.state = {
             time: 0,
+            paused: false
         }
         this.startTimer = this.startTimer.bind(this);
         this.pauseTimer = this.pauseTimer.bind(this);
@@ -20,7 +21,7 @@ class HomeView extends React.Component {
 
     async handleAppStateChange(nextAppState) {
         const now = new Date().getTime();
-        const { time } = this.state;
+        const { time, paused } = this.state;
 
         const readTime = await AsyncStorage.getItem('@time');
         const readStateTimestamp = await AsyncStorage.getItem('@appStateChangedStamp');
@@ -31,14 +32,20 @@ class HomeView extends React.Component {
         console.log('timeDifference: ', timeDifference, 'newTime: ', newTime);
 
         if (nextAppState === 'active') {
-            this.setState({
-                time: newTime
-            }, this.startTimer)
+            const isPaused = await AsyncStorage.getItem('@isPaused');
+            const wasPaused = isPaused && isPaused === 'true'
+            let newState = {
+                paused: wasPaused,
+                time: readTime
+            };
+            if (!wasPaused) {
+                newState.time = newTime;
+            }
+        } else {
+            await AsyncStorage.setItem('@isPaused', JSON.stringify(paused));
+            await AsyncStorage.setItem('@time', JSON.stringify(time));
+            await AsyncStorage.setItem('@appStateChangedStamp', JSON.stringify(now));
         }
-
-        await AsyncStorage.setItem('@time', JSON.stringify(time));
-        await AsyncStorage.setItem('@appStateChangedStamp', JSON.stringify(now));
-
     }
 
     componentDidMount() {
@@ -50,14 +57,17 @@ class HomeView extends React.Component {
     }
 
     startTimer() {
-        setInterval(() => {
+        if (this.timerIntervalId) {
+            clearInterval(this.timerIntervalId)
+        }
+        this.timerIntervalId = setInterval(() => {
             const { time, paused } = this.state;
             if (!paused) {
                 this.setState({
                     time: time + 1000
                 })
             }
-        });
+        }, 1000);
     }
 
     pauseTimer() {
