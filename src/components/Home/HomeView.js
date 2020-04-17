@@ -23,11 +23,11 @@ class HomeView extends React.Component {
         const now = new Date().getTime();
         const { time, paused } = this.state;
 
-        const readTime = await AsyncStorage.getItem('@time');
-        const readStateTimestamp = await AsyncStorage.getItem('@appStateChangedStamp');
+        const readTime = parseInt(await AsyncStorage.getItem('@time'));
+        const readStateTimestamp = parseInt(await AsyncStorage.getItem('@appStateChangedStamp'));
 
-        const timeDifference = now - parseInt(readStateTimestamp)
-        const newTime = parseInt(readTime) + timeDifference
+        const timeDifference = now - readStateTimestamp
+        const newTime = readTime + timeDifference
 
         console.log('timeDifference: ', timeDifference, 'newTime: ', newTime);
 
@@ -67,7 +67,9 @@ class HomeView extends React.Component {
                     time: time + 1000
                 })
             }
-        }, 1000);
+        }
+        //, 1000
+        );
     }
 
     pauseTimer() {
@@ -78,7 +80,7 @@ class HomeView extends React.Component {
     }
 
     render() {
-        const { time } = this.state;
+        const { time, paused } = this.state;
         return (
             <View style={[{ flex: 1 }, HomeViewStyles.homeViewContainer]} >
                 <View style={{ flex: 1 }}>
@@ -86,6 +88,7 @@ class HomeView extends React.Component {
                 </View>
                 <View style={{ flex: 2 }}>
                     <StopWatchButton
+                        paused={paused}
                         time={time}
                         startOnPressAction={this.startTimer}
                         timerOnPressAction={this.pauseTimer}
