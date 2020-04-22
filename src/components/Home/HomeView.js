@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, AppState } from 'react-native';
+import { View, Text, AppState, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import HomeViewStyles from './HomeViewStyles';
@@ -7,7 +7,6 @@ import i18n from '../../i18n/i18n'
 import StopWatchButton from '../StopwatchButton/StopWatchButton';
 
 class HomeView extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -57,9 +56,7 @@ class HomeView extends React.Component {
     }
 
     startTimer() {
-        if (this.timerIntervalId) {
-            clearInterval(this.timerIntervalId)
-        }
+        this.clearTimer();
         this.timerIntervalId = setInterval(() => {
             const { time, paused } = this.state;
             if (!paused) {
@@ -67,9 +64,7 @@ class HomeView extends React.Component {
                     time: time + 1000
                 })
             }
-        }
-        //, 1000
-        );
+        }, 1000);
     }
 
     pauseTimer() {
@@ -79,6 +74,31 @@ class HomeView extends React.Component {
         })
     }
 
+    clearTimer() {
+        if (this.timerIntervalId) {
+            clearInterval(this.timerIntervalId)
+        }
+    }
+
+    renderFinishButton() {
+        const { time, paused } = this.state;
+        if (time && !paused) {
+            return (
+                <TouchableOpacity onPress={() => {
+                    this.clearTimer();
+                    this.setState({
+                        time: 0
+                    });
+                    this.props.navigation.navigate("Finish");
+                }}>
+                    <Text style={HomeViewStyles.finishButtonText}>{i18n.HOME.FINISH_BUTTON_CAPTION}</Text>
+                </TouchableOpacity>
+            )
+        } else {
+            return null
+        }
+    }
+
     render() {
         const { time, paused } = this.state;
         return (
@@ -86,13 +106,14 @@ class HomeView extends React.Component {
                 <View style={{ flex: 1 }}>
                     <Text style={HomeViewStyles.welcomeHeader}>{i18n.HOME.WELCOME_HEADER}</Text>
                 </View>
-                <View style={{ flex: 2 }}>
+                <View style={[{ flex: 2 }, HomeViewStyles.buttonsContainer]}>
                     <StopWatchButton
                         paused={paused}
                         time={time}
                         startOnPressAction={this.startTimer}
                         timerOnPressAction={this.pauseTimer}
                     />
+                {this.renderFinishButton()}                
                 </View>
             </View>
         );

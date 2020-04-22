@@ -1,11 +1,12 @@
 const i18n = {
     TIME_FORMAT: 'HH.mm.ss',
     HOME: {
-        WELCOME_HEADER: 'Good Morning!'
+        WELCOME_HEADER: 'Good Morning!',
+        FINISH_BUTTON_CAPTION: 'Finish'
     },
     STOP_WATCH: {
-        START: 'START',
-        PAUSE: 'PAUSE'
+        START: 'Start',
+        PAUSE: 'Pause'
     }
 };
 

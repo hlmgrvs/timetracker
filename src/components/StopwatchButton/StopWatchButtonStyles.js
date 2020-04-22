@@ -13,12 +13,16 @@ const StopWatchButtonStyles = StyleSheet.create({
     mainActionButtonText: {
         fontSize: 60,
         color: '#FFF',
+        textTransform: "uppercase",
         fontWeight: 'bold'
     },
 
     mainActionButtonPauseText: {
+        textTransform: "uppercase",
         fontSize: 24
-    }
+    },
+
+
 })
 
 export default StopWatchButtonStyles
