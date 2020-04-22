@@ -21,7 +21,6 @@ function Tabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomeView} />
-      <Tab.Screen name="Finish" component={FinishView} />
       <Tab.Screen name="History" component={HistoryView} />
     </Tab.Navigator>
   );
@@ -32,10 +31,8 @@ const Stack = createStackNavigator();
 function MyStack() {
   return (
     <Stack.Navigator headerMode="none">
-      <Stack.Screen
-        name="Tabs"
-        component={Tabs}
-      />
+      <Stack.Screen name="Tabs" component={Tabs} />
+      <Stack.Screen name="Finish" component={FinishView} />
     </Stack.Navigator>
   );
 }
@@ -45,10 +42,25 @@ function App() {
   return (
     <>
       <NavigationContainer>
-        <MyStack/>
+        <MyStack />
       </NavigationContainer>
     </>
   );
 }
 
 export default App;
+
+// const Tab = createBottomTabNavigator(
+//   {
+//     Home: {
+//       screen: HomeView
+//     },    
+//     Finish: {
+//       screen: FinishView
+//     },   
+//     History: {
+//       screen: HistoryView
+//     }
+//   },
+//   {}
+// );
