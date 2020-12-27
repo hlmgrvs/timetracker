@@ -30,13 +30,12 @@ const Stack = createStackNavigator();
 
 function MyStack() {
   return (
-    <Stack.Navigator headerMode="none">
+    <Stack.Navigator headerMode="none" initialRouteName='Finish'>
       <Stack.Screen name="Tabs" component={Tabs} />
       <Stack.Screen name="Finish" component={FinishView} />
     </Stack.Navigator>
   );
 }
-
 
 function App() {
   return (
@@ -49,18 +48,3 @@ function App() {
 }
 
 export default App;
-
-// const Tab = createBottomTabNavigator(
-//   {
-//     Home: {
-//       screen: HomeView
-//     },    
-//     Finish: {
-//       screen: FinishView
-//     },   
-//     History: {
-//       screen: HistoryView
-//     }
-//   },
-//   {}
-// );
